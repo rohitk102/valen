@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💖</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:"Comic Sans MS",cursive;
+  color:white;
+  background:#020617;
+}
+
+/* ================= FILM STRIP ================= */
+.film-strip{
+  position:fixed;
+  top:0;
+  width:180px;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+  padding:40px 20px;
+  overflow:hidden;
+  z-index:3;
+}
+
+.film-strip-left{
+  left:0;
+}
+
+.film-strip-right{
+  right:0;
+}
+
+.film-strip img{
+  width:140px;
+  height:140px;
+  object-fit:cover;
+  border-radius:12px;
+  border:4px solid #ff5d8f;
+  box-shadow:0 0 20px rgba(255,93,143,0.8);
+  flex-shrink:0;
+  margin-bottom:15px;
+}
+
+.film-inner{
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+  animation:filmMove 35s linear infinite;
+}
+
+.film-strip-right .film-inner{
+  animation-direction:reverse;
+}
+
+@keyframes filmMove{
+  from{ transform:translateY(0); }
+  to{ transform:translateY(-50%); }
+}
+
+/* ================= CLOUDS ================= */
+.cloud{
+  position:absolute;
+  width:260px;
+  height:80px;
+  background:rgba(200,220,255,0.15);
+  border-radius:50px;
+  filter:blur(10px);
+  box-shadow:
+    0 0 30px rgba(125,211,252,0.15),
+    0 0 60px rgba(255,255,255,0.08);
+}
+.cloud::before,
+.cloud::after{
+  background:rgba(220,235,255,0.2);
+}
+
+
+.cloud::before,
+.cloud::after{
+  content:"";
+  position:absolute;
+  background:rgba(255,255,255,0.16);
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  top:-60px;
+}
+
+.cloud::before{ left:30px }
+.cloud::after{ left:110px; top:-40px }
+
+/* intro clouds */
+.cloud-intro{
+  top:15%;
+  animation:cloudMoveIntro 90s linear infinite;
+  z-index:9;
+}
+
+/* main clouds */
+.cloud-main{
+  top:35%;
+  animation:cloudMoveMain 70s linear infinite;
+  z-index:2;
+}
+
+@keyframes cloudMoveIntro{
+  from{ left:-320px }
+  to{ left:110vw }
+}
+@keyframes cloudMoveMain{
+  from{ left:-320px }
+  to{ left:110vw }
+}
+
+/* ================= INTRO ================= */
+#intro{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top,#0b1d3a,#020617);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:30px;
+  z-index:10;
+  transition:opacity 1.5s ease;
+}
+.intro-text{
+  font-size:28px;
+  text-align:center;
+  opacity:0;
+  animation:fadeText 4s ease-in-out forwards;
+  max-width:600px;
+}
+@keyframes fadeText{
+  0%{opacity:0;transform:translateY(20px)}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{opacity:0;transform:translateY(-20px)}
+}
+.intro-star{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:white;
+  border-radius:50%;
+  opacity:.8;
+  animation:twinkle 3s infinite alternate;
+}
+
+/* ================= MAIN ================= */
+#main{
+  opacity:0;
+  pointer-events:none;
+}
+
+/* stars */
+.star{
+  position:absolute;
+  background:linear-gradient(#ffffff,#7dd3fc);
+  border-radius:50%;
+  filter:
+    drop-shadow(0 0 6px rgba(125,211,252,0.8))
+    drop-shadow(0 0 12px rgba(255,255,255,0.6));
+  animation:twinkle 4s infinite alternate;
+}
+
+.star.far{width:1px;height:1px;opacity:.4}
+.star.mid{width:1.6px;height:1.6px;opacity:.65}
+.star.near{width:2.4px;height:2.4px;opacity:1}
+
+@keyframes twinkle{from{opacity:.3}to{opacity:1}}
+
+/* meteors */
+.shooting-star{
+  position:absolute;
+  width:180px;
+  height:2px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    #7dd3fc,
+    #ffffff,
+    #ff5d8f
+  );
+  filter:
+    drop-shadow(0 0 12px rgba(125,211,252,0.9))
+    drop-shadow(0 0 18px rgba(255,93,143,0.7));
+  opacity:0;
+  transform:rotate(var(--angle));
+  animation:meteor 1.6s cubic-bezier(.25,.1,.25,1) forwards;
+}
+
+@keyframes meteor{
+  15%{opacity:1}
+  100%{
+    transform:translate(calc(var(--dx)*1px),calc(var(--dy)*1.15px))
+             rotate(calc(var(--angle) + 2deg));
+    opacity:0;
+  }
+}
+
+/* fireflies */
+.firefly{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ffd6e0;
+  box-shadow:
+    0 0 10px rgba(255,214,224,1),
+    0 0 25px rgba(255,93,143,0.9),
+    0 0 40px rgba(125,211,252,0.6);
+  opacity:0;
+  animation:
+    fireflyMove linear infinite,
+    fireflyGlow ease-in-out infinite;
+}
+
+@keyframes fireflyMove{ to{transform:translate(var(--dx),var(--dy))} }
+@keyframes fireflyGlow{0%{opacity:.2}50%{opacity:1}100%{opacity:.3}}
+
+/* snow */
+.snow{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:35%;
+background:
+  radial-gradient(2px 2px at 10% 10%, #ffffff, transparent),
+  radial-gradient(2px 2px at 50% 30%, #e0f2fe, transparent),
+  radial-gradient(2px 2px at 80% 20%, #bae6fd, transparent);
+
+  background-size:200px 200px;
+  animation:snow 22s linear infinite;
+  mask-image:linear-gradient(to top,black,transparent);
+}
+@keyframes snow{to{background-position:0 450px}}
+
+/* center */
+.center{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  z-index:5;
+}
+.buttons{margin-top:24px;display:flex;gap:18px;justify-content:center}
+button{
+  padding:16px;
+  font-size:18px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  width:140px;
+}
+#yesBtn{
+  background:linear-gradient(135deg,#ff5d8f,#ffd6e0);
+  color:#020617;
+  box-shadow:
+    0 0 20px rgba(255,93,143,0.6),
+    0 0 40px rgba(255,214,224,0.4);
+}
+
+#noBtn{
+  background:rgba(255,255,255,0.7);
+  color:#020617;
+}
+
+
+/* hearts */
+.heart{
+  position:absolute;
+  font-size:22px;
+  animation:heartBurst 5s ease-out forwards;
+  z-index:20;
+  pointer-events:none;
+}
+@keyframes heartBurst{
+  to{transform:translate(var(--x),var(--y)) scale(1.6);opacity:0}
+}
+
+/* fireworks */
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  animation:firework 1.8s ease-out forwards;
+  z-index:20;
+  pointer-events:none;
+}
+@keyframes firework{
+  to{transform:translate(var(--x),var(--y));opacity:0}
+}
+/* ================= INTRO IMAGE ================= */
+.intro-image{
+  width:220px;
+  max-width:70%;
+  border-radius:18px;
+  box-shadow:
+    0 0 30px rgba(255,93,143,0.4),
+    0 0 60px rgba(125,211,252,0.3);
+  opacity:0;
+  animation:fadeImage 4s ease-in-out forwards;
+}
+
+@keyframes fadeImage{
+  0%{opacity:0;transform:scale(.85) translateY(20px)}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{opacity:0;transform:scale(1.05) translateY(-20px)}
+}
+.intro-text{ z-index:2; }
+.love-word{
+  position:absolute;
+  font-size:18px;
+  color:#ffd6e0;
+  opacity:0;
+  animation:lovePop 3.5s ease-out forwards;
+  text-shadow:0 0 10px rgba(255,93,143,0.8);
+  z-index:20;
+  pointer-events:none;
+}
+
+@keyframes lovePop{
+  0%{opacity:0;transform:scale(.5) translateY(20px)}
+  30%{opacity:1}
+  100%{opacity:0;transform:scale(1.4) translateY(-120px)}
+}
+
+/* ================= FALLING STARS ================= */
+.falling-star{
+  position:fixed;
+  background:linear-gradient(#ffffff,#7dd3fc);
+  border-radius:50%;
+  filter:drop-shadow(0 0 6px rgba(125,211,252,0.8)) drop-shadow(0 0 12px rgba(255,255,255,0.6));
+  opacity:1;
+  animation:starFall linear infinite;
+  pointer-events:none;
+  z-index:1;
+}
+
+@keyframes starFall{
+  0%{
+    transform:translateY(-50px) rotate(0deg);
+    opacity:0.8;
+  }
+  100%{
+    transform:translateY(100vh) rotate(360deg);
+    opacity:0.2;
+  }
+}
+
+/* ================= START SCREEN ================= */
+#startScreen{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top,#0b1d3a,#020617);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.start-box{
+  text-align:center;
+  max-width:420px;
+  padding:40px;
+  border-radius:20px;
+  background:rgba(0,0,0,0.4);
+  box-shadow:
+    0 0 30px rgba(255,93,143,0.4),
+    0 0 60px rgba(125,211,252,0.3);
+}
+
+.start-box h2{
+  font-size:28px;
+  margin-bottom:12px;
+}
+
+.start-box p{
+  font-size:18px;
+  line-height:1.6;
+  margin-bottom:28px;
+}
+
+#startBtn{
+  padding:14px 30px;
+  font-size:18px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff5d8f,#ffd6e0);
+  color:#020617;
+  box-shadow:
+    0 0 20px rgba(255,93,143,0.6),
+    0 0 40px rgba(255,214,224,0.4);
+}
+.start-content{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.start-sticker{
+  width:120px;
+  max-width:35vw;
+  animation: stickerFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(255,93,143,0.6));
+}
+
+@keyframes stickerFloat{
+  0%{ transform:translateY(0) }
+  50%{ transform:translateY(-8px) }
+  100%{ transform:translateY(0) }
+}
+/* ================= BUTTON STICKERS ================= */
+.buttons-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  margin-top:24px;
+}
+
+.choice-sticker{
+  width:120px;
+  max-width: 30vw;
+  animation: stickerBounce 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255,93,143,0.6));
+}
+
+@keyframes stickerBounce{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+
+</style>
+</head>
+
+<body>
+<audio id="bgMusic" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- START MESSAGE SCREEN -->
+<div id="startScreen">
+  <div class="start-box">
+    <div class="start-content">
+      
+      <img src="stick1.jpeg" class="start-sticker" alt="cute sticker">
+
+      <div class="start-text">
+        <h2>Hey ❤️</h2>
+        <p>
+          Before this starts…<br>
+          I know we wont celebrate valentine day ofc milda ni mildaina<br>
+          But still I wanted to do smtg aba flower or aru gift you dont like rakhna ni mildaina so i thought <br>
+          This is what I  know sooo yesso try gareko <br>
+          Hope u like it...my special someone❤️❤️<br>
+        </p>
+        <button id="startBtn">Continue 💖</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- FILM STRIP LEFT -->
+<div class="film-strip film-strip-left">
+  <div class="film-inner" id="filmLeft"></div>
+</div>
+
+<!-- FILM STRIP RIGHT -->
+<div class="film-strip film-strip-right">
+  <div class="film-inner" id="filmRight"></div>
+</div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-text" id="introText"></div>
+<img id="introImage" class="intro-image" src="img1.jpeg" alt="intro image">
+
+  <!-- intro clouds -->
+  <div class="cloud cloud-intro" style="top:12%; animation-delay:0s"></div>
+  <div class="cloud cloud-intro" style="top:22%; animation-delay:30s"></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- main clouds -->
+  <div class="cloud cloud-main" style="animation-delay:0s"></div>
+  <div class="cloud cloud-main" style="top:45%; animation-delay:35s"></div>
+
+  <div class="snow"></div>
+  <div class="center" id="center">
+    <h1>Will you be my Valentine? 💖</h1>
+  <div class="buttons-wrap">
+  <img id="leftSticker" class="choice-sticker" src="stick2.jpeg" alt="sticker">
+
+  <div class="buttons">
+    <button id="yesBtn">YES 💘</button>
+    <button id="noBtn">No 🙄</button>
+  </div>
+
+  <img id="rightSticker" class="choice-sticker" src="stick3.jpeg" alt="sticker">
+</div>
+
+    <p id="message"></p>
+  </div>
+</div>
+
+<script>
+
+/* ================= SETUP ================= */
+const intro = document.getElementById("intro");
+const main  = document.getElementById("main");
+const introText = document.getElementById("introText");
+const introImg = document.getElementById("introImage");
+
+/* INTRO STARS */
+for(let i=0;i<140;i++){
+  const s=document.createElement("div");
+  s.className="intro-star";
+  s.style.left=Math.random()*100+"%";
+  s.style.top=Math.random()*100+"%";
+  s.style.animationDuration=2+Math.random()*3+"s";
+  intro.appendChild(s);
+}
+
+/* ================= FALLING STARS SETUP ================= */
+// Create falling stars continuously
+setInterval(() => {
+  const star = document.createElement("div");
+  star.className = "falling-star";
+  const size = 1.5 + Math.random() * 2; // Random size between 1.5px and 3.5px
+  star.style.width = size + "px";
+  star.style.height = size + "px";
+  star.style.left = Math.random() * 100 + "%";
+  const fallDuration = 8 + Math.random() * 7; // Fall duration 8-15s
+  star.style.animationDuration = fallDuration + "s";
+  document.body.appendChild(star);
+  setTimeout(() => star.remove(), fallDuration * 1000);
+}, 300);
+
+/* FILM STRIP SETUP */
+const filmLeft  = document.getElementById("filmLeft");
+const filmRight = document.getElementById("filmRight");
+
+const albumImages = [
+  "album1.jpeg","album2.jpeg","album3.jpeg","album4.jpeg",
+  "album5.jpeg","album6.jpeg","album7.jpeg","album8.jpeg",
+  "album9.jpeg","album10.jpeg"
+];
+
+function buildFilm(filmEl) {
+  const images = [...albumImages, ...albumImages]; // duplicate for seamless loop
+  images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "album";
+    filmEl.appendChild(img);
+  });
+}
+
+buildFilm(filmLeft);
+buildFilm(filmRight);
+/* INTRO TEXT */
+const lines=[
+  "Every second with you feels like a dream 🌠",
+  "You are not just the moon but the entire night sky ✨",
+  "Your heart and soul is sweet and pure 🌌",
+  "Thank you for being my happiness and my strength 💖"
+];
+
+let idx=0;
+
+
+const images = [
+  "img1.jpeg",
+  "img2.jpeg",
+  "img3.jpeg",
+  "img4.jpeg"
+];
+
+const loveWords = [
+  "I ❤️ Your eyes ✨",
+  "I ❤️Your smile 😊",
+  "I 🤍Your sweetness 💕",
+  "I ❤️Your heart ❤️",
+  "I 💛Your soul 🌟",
+  "I 💙Your dancing 💃",
+  "I ❤️Your hair 💫",
+  "I 💖Your hardwork 💼",
+  "I 🤍Your choices 🎯",
+  "I ❤️Your sincerity 🤍",
+  "I 💛Your chubby cheeks 😄",
+  "I ❤️Your shyness 🙈",
+  "I 🧡Your boldness 😎",
+  "I 🤍Your caring nature 🌷",
+  "I 💖Your laughter 🤣",
+  "I 🧡Your warmth 🌞",
+  "I ❤️Your laugh 💫",
+  "I 💛Your kindness 💖",
+  "I 🤍Your sense of humor 😂",
+  "I 🤍Your little laugh 🤭",
+  "I ❤️Your cooking 🍳",
+  "I 💙Your goodbye wave 🤗",
+  "I ❤️Your dedication to studies 📚",
+  "I 💙Your teamwork in projects 🤝",
+  "I 💛Your cheerful greetings every morning 🌞",
+  "I ❤️Your hugs that feel like home 🏡",
+  "I 💙Your imagination ✨",
+  "I 🤍Your honesty 💬",
+  "I ❤️Your energy ⚡",
+  "I 💙Your curiosity 🌏",
+  "I 🤍Your voice 🎶",
+  "I ❤️Your style 👗",
+  "I ❤️Your strength 💪",
+  "I 💙Your texts 📱",
+  "I 💛Your hugs 🤗",
+  "I 🧡Your patience ⏳",
+  "I 💙Your thoughts 💭",
+  "I 🧡Your dreams 🌙",
+  "I ❤️Everything about you 🌸"
+];
+const leftSticker  = document.getElementById("leftSticker");
+const rightSticker = document.getElementById("rightSticker");
+
+function nextLine(){
+  /* AFTER 4TH LINE → LOVE PHASE */
+  if(idx === lines.length){
+    introText.textContent = "I Love You ❤️";
+    introText.style.animation = "none";
+    void introText.offsetWidth;
+    introText.style.animation = "fadeText 4s ease-in-out forwards";
+
+    // Show buttons immediately at the same time
+    main.style.opacity = 1;
+    main.style.pointerEvents = "auto";
+    intro.style.zIndex = 1;
+    initScene();
+
+    // pop love words like stars
+    for(let i=0;i<18;i++){
+      setTimeout(()=>{
+        const w=document.createElement("div");
+        w.className="love-word";
+        w.textContent=loveWords[Math.floor(Math.random()*loveWords.length)];
+        w.style.left=Math.random()*100+"%";
+        w.style.top=Math.random()*60+"%";
+        intro.appendChild(w);
+        setTimeout(()=>w.remove(),3500);
+      },i*180);
+    }
+
+    idx++;
+    clearInterval(nextLineInterval);
+    return;
+  }
+
+  /* END INTRO */
+  if(idx > lines.length){
+    intro.style.opacity = 0;
+    setTimeout(()=>{
+      intro.style.display = "none";
+    },1500);
+    return;
+  }
+
+  /* NORMAL TEXT + IMAGE */
+  introText.textContent = lines[idx];
+  introText.style.animation = "none";
+  void introText.offsetWidth;
+  introText.style.animation = "fadeText 4s ease-in-out forwards";
+
+  introImg.src = images[idx];
+  introImg.style.animation = "none";
+  void introImg.offsetWidth;
+  introImg.style.animation = "fadeImage 4s ease-in-out forwards";
+
+  idx++;
+}
+
+
+// nextLine() will be called when start button is clicked
+
+/* MAIN SCENE */
+function initScene(){
+  [70,50,30].forEach((n,i)=>{
+    for(let j=0;j<n;j++){
+      const s=document.createElement("div");
+      s.className=`star ${["far","mid","near"][i]}`;
+      s.style.left=Math.random()*100+"%";
+      s.style.top=Math.random()*100+"%";
+      document.body.appendChild(s);
+    }
+  });
+
+  setInterval(()=>{
+    const m=document.createElement("div");
+    m.className="shooting-star";
+    m.style.left=Math.random()*innerWidth+"px";
+    m.style.top=Math.random()*innerHeight*0.35+"px";
+    m.style.setProperty("--dx",-300-Math.random()*500);
+    m.style.setProperty("--dy",200+Math.random()*350);
+    m.style.setProperty("--angle",205+Math.random()*12+"deg");
+    document.body.appendChild(m);
+    setTimeout(()=>m.remove(),1800);
+  },260);
+
+  for(let i=0;i<14;i++){
+    const f=document.createElement("div");
+    f.className="firefly";
+    function reset(){
+      f.style.left=Math.random()*innerWidth+"px";
+      f.style.top=innerHeight*(0.55+Math.random()*0.35)+"px";
+      f.style.setProperty("--dx",(Math.random()*200-100)+"px");
+      f.style.setProperty("--dy",(Math.random()*-120-40)+"px");
+      f.style.animationDuration=(10+Math.random()*8)+"s,"+(2+Math.random()*2)+"s";
+    }
+    reset();
+    document.body.appendChild(f);
+    setInterval(reset,12000+Math.random()*6000);
+  }
+
+  // Love words continuously appearing
+  setInterval(()=>{
+    const w=document.createElement("div");
+    w.className="love-word";
+    w.textContent=loveWords[Math.floor(Math.random()*loveWords.length)];
+    w.style.left=Math.random()*100+"%";
+    w.style.top=Math.random()*80+"%";
+    document.body.appendChild(w);
+    setTimeout(()=>w.remove(),3500);
+  },500);
+}
+/* ================= BUTTON INTERACTION ================= */
+
+const yesBtn = document.getElementById("yesBtn");
+const noBtn  = document.getElementById("noBtn");
+const message = document.getElementById("message");
+const center = document.getElementById("center");
+const startBtn = document.getElementById("startBtn");
+const startScreen = document.getElementById("startScreen");
+
+const bgMusic = document.getElementById("bgMusic");
+
+startBtn.addEventListener("click", () => {
+  // Fade out start screen
+  startScreen.style.opacity = "0";
+  startScreen.style.pointerEvents = "none";
+  setTimeout(() => startScreen.remove(), 1200);
+
+  // Start music
+  bgMusic.volume = 0;
+  bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+
+  let vol = 0;
+  const fadeIn = setInterval(() => {
+    vol += 0.02;
+    if (vol >= 0.5) {
+      vol = 0.5;
+      clearInterval(fadeIn);
+    }
+    bgMusic.volume = vol;
+  }, 200);
+
+  // Start intro text sequence
+  nextLine(); // show first line immediately
+  window.nextLineInterval = setInterval(nextLine, 4500); // show next lines every 4.5s
+});
+
+
+
+
+let noCount = 0;
+let noScale = 1;
+
+const noMessagesEarly = [
+  "Wait… ekchoti sochana 🥺",
+  "Please sunana 💭",
+  "Just euta yes 🙈",
+  "Designer bad dinxu....👉👈",
+ "Yesto nagarana 😭"
+];
+
+const noMessagesLate = [
+  "Bf Dai sochera vayeni yes vandeuna😭 "
+];
+
+const sadEmojis = ["🥹","😭","💔","💗","😵‍💫","🥰","👉👈"];
+
+/* 😈 NO BUTTON */
+noBtn.onclick = () => {
+  noCount++;
+
+  let emojiTrail = "";
+  for (let i = 0; i < Math.min(noCount, 6); i++) {
+    emojiTrail += sadEmojis[Math.floor(Math.random() * sadEmojis.length)];
+  }
+
+  if (noCount <= 5) {
+    message.textContent =
+      noMessagesEarly[Math.floor(Math.random() * noMessagesEarly.length)]
+      + " " + emojiTrail;
+  } else {
+    message.textContent =
+      noMessagesLate[Math.floor(Math.random() * noMessagesLate.length)]
+      + " " + emojiTrail;
+
+    // Run away
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.random() * (innerWidth - 120) + "px";
+    noBtn.style.top  = Math.random() * (innerHeight - 60) + "px";
+  }
+
+  // Shrink
+  if (noScale > 0.4) {
+    noScale -= 0.1;
+    noBtn.style.transform = `scale(${noScale})`;
+    noBtn.style.opacity = noScale;
+  }
+};
+
+/* 💖 YES BUTTON */
+yesBtn.addEventListener("click", function() {
+  // 💖 change stickers ONLY on YES
+leftSticker.src  = "happyleft.jpeg";
+rightSticker.src = "happyleft.jpeg";
+
+  console.log("YES button clicked!");
+  
+  // Hide intro immediately
+  intro.style.opacity = "0";
+  intro.style.pointerEvents = "none";
+  setTimeout(() => intro.remove(), 1200);
+  
+  // 💕 IMMEDIATE INITIAL BURST
+  for (let i = 0; i < 160; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = ["💖","💗","💕","💘"][Math.floor(Math.random()*4)];
+    h.style.left = (Math.random() * window.innerWidth) + "px";
+    h.style.top  = (Math.random() * window.innerHeight) + "px";
+    h.style.setProperty("--x", (Math.random()*900 - 450) + "px");
+    h.style.setProperty("--y", (Math.random()*-900) + "px");
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 5000);
+  }
+
+  setInterval(() => {
+    for (let i = 0; i < 40; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = ["💖","💗","💕","💘"][Math.floor(Math.random()*4)];
+      h.style.left = (Math.random() * window.innerWidth) + "px";
+      h.style.top  = (Math.random() * window.innerHeight) + "px";
+      h.style.setProperty("--x", (Math.random()*900 - 450) + "px");
+      h.style.setProperty("--y", (Math.random()*-900) + "px");
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 5000);
+    }
+  }, 800);
+
+  // 🎆 CONTINUOUS FIREWORK LOOP
+  setInterval(() => {
+    for (let i = 0; i < 80; i++) {
+      const f = document.createElement("div");
+      f.className = "firework";
+      f.style.left = Math.random() * 100 + "%";
+      f.style.top  = Math.random() * 55 + "%";
+      const a = Math.random() * Math.PI * 2;
+      const d = 160 + Math.random() * 220;
+      f.style.background = ["#ff5d8f","#ffd6e0","#ffffff","#7dd3fc"]
+        [Math.floor(Math.random()*4)];
+      f.style.setProperty("--x", Math.cos(a)*d + "px");
+      f.style.setProperty("--y", Math.sin(a)*d + "px");
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 1800);
+    }
+  }, 600);
+
+  // 💖 CONTINUOUS LOVE WORDS
+  setInterval(() => {
+    for(let i=0;i<10;i++){
+      setTimeout(()=>{
+        const w=document.createElement("div");
+        w.className="love-word";
+        w.textContent=loveWords[Math.floor(Math.random()*loveWords.length)];
+        w.style.left=Math.random()*100+"%";
+        w.style.top=Math.random()*60+"%";
+        document.body.appendChild(w);
+        setTimeout(()=>w.remove(),3500);
+      },i*100);
+    }
+  }, 1000);
+
+  // 💖 FINAL MESSAGE
+  center.innerHTML = `
+    <h1 style="color:#ff5d8f;">Thank You Sesuuuuuu 💖</h1>
+    <p>I am the luckiest person ever 🥰</p>
+    <p>Happy Valentine’s Day My Princess 💘</p>
+  `;
+});
+
+
+</script>
+
+</body>
+</html>
